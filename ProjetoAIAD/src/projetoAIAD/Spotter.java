@@ -55,7 +55,7 @@ public class Spotter extends MarsAgent{
 		while(iterador.hasNext())
 		{
 			 elemento = iterador.next();
-			if(elemento instanceof Mine && mina==null)
+			if(elemento instanceof Mine)
 			{		
 				if(!visitados.contains(((Mine) elemento).id)){
 					minepoint = space.getLocation(elemento);
@@ -63,7 +63,7 @@ public class Spotter extends MarsAgent{
 					//System.out.println("X: " + minepoint.getX() +  " Y: " + minepoint.getY() + " Quantity:" + ((Mine) elemento).getQuantity()+
 					//		" ID: "+((Mine) elemento).id);
 				}
-			}else if(elemento instanceof Producer && producer==null && mina!=null ){
+			}else if(elemento instanceof Producer  && mina!=null ){
 				 double x = space.getLocation(mina).getX();
 				 double y = space.getLocation(mina).getY();
 				 producer=elemento;
