@@ -6,18 +6,31 @@ import java.util.List;
 import java.util.Random;
 
 import jade.lang.acl.ACLMessage;
+
+import repast.simphony.context.Context;
+
 import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.space.SpatialMath;
+import repast.simphony.space.continuous.ContinuousSpace;
 import repast.simphony.space.continuous.NdPoint;
+
+import repast.simphony.space.grid.Grid;
+import repast.simphony.util.ContextUtils;
+import sajas.core.Agent;
+import sajas.core.behaviours.CyclicBehaviour;
+
 import sajas.core.AID;
 
-public class Producer extends MarsAgent{
+
+public class Producer extends Agent{
 	private int id;
 	private Random random = new Random();
 	private Double angle = null;
 	private final double randomness = 0.05;
 	
-	private boolean alreadySent=false;
+	private ContinuousSpace<Object> space;
+	private Grid<Object> grid;
+
 	
 	Producer(int id)
 	{
@@ -29,18 +42,37 @@ public class Producer extends MarsAgent{
 		return id;
 	}
 	
+	@Override
+	public void setup(){
+		super.setup();
+	
+		Context context = ContextUtils.getContext(this);
+		space = (ContinuousSpace<Object>)context.getProjection("space");
+		NdPoint pt = space.getLocation(this);
+		grid = (Grid<Object>)context.getProjection("grid");
+		grid.moveTo(this, (int) pt.getX(), (int) pt.getY());
+		
+		
+		
+		addBehaviour(new CyclicBehaviour(this) 
+        {
+             public void action() 
+             {
+            	 ACLMessage msg;
+
+                 while ((msg = receive())!=null)
+                     System.out.println(msg.getContent());
+                 
+                
+                 
+             }
+        });
+	}
+	
 	
 	@ScheduledMethod(start = 2, interval = 10000)
 	public void stepProducer() {
-		
-		if(!alreadySent)
-		if(super.sender!=null){
-			ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
-			msg.setContent("ok" );
-			 msg.addReceiver(super.sender);
-	 	     send(msg);
-	 	     alreadySent=true;
-		}
+	
 		
 		normalMovement();
 		

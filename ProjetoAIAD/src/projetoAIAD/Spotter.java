@@ -15,12 +15,17 @@ import repast.simphony.query.space.continuous.ContinuousWithin;
 import repast.simphony.space.SpatialMath;
 import repast.simphony.space.continuous.ContinuousSpace;
 import repast.simphony.space.continuous.NdPoint;
+import repast.simphony.space.grid.Grid;
+import repast.simphony.util.ContextUtils;
 import sajas.core.AID;
 import sajas.core.Agent;
 import sajas.core.behaviours.*;
 
-public class Spotter extends MarsAgent{
+public class Spotter extends Agent{
 
+	private ContinuousSpace<Object> space;
+	private Grid<Object> grid;
+	
 	private Random random = new Random();
 	private Double angle = null;
 	private final double randomness = 0.05;
@@ -41,6 +46,33 @@ public class Spotter extends MarsAgent{
 	}
 
 
+	@Override
+	public void setup(){
+		super.setup();
+		Context context = ContextUtils.getContext(this);
+		space = (ContinuousSpace<Object>)context.getProjection("space");
+		NdPoint pt = space.getLocation(this);
+		grid = (Grid<Object>)context.getProjection("grid");
+		grid.moveTo(this, (int) pt.getX(), (int) pt.getY());
+		
+		/*
+		if(this.getClass().isAssignableFrom(Spotter.class)){
+			
+		}
+		*/
+		
+		addBehaviour(new CyclicBehaviour(this) 
+        {
+             public void action() 
+             {
+            	 ACLMessage msg;
+                 while ((msg = receive())!=null)
+                     System.out.println(msg.getContent());
+             }
+        });
+	}
+
+	
 	@ScheduledMethod(start = 2, interval = 10000)
 	public void stepSpotter() {
 		

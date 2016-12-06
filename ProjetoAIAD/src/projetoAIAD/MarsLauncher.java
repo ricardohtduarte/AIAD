@@ -63,10 +63,15 @@ public class MarsLauncher extends RepastSLauncher{
 			
 			
 			ContinuousSpace<Object> space = ((ContinuousSpace<Object>)this.context.getProjection("space"));
-			for (Object obj : context.getObjects(MarsAgent.class))
+			/*for (Object obj : context.getObjects(Producer.class))
 			{
 				space.moveTo(obj, startPoint);
 			}
+			for (Object obj : context.getObjects(Spotter.class))
+			{
+				space.moveTo(obj, startPoint);
+			}*/
+			
 
 		} catch (StaleProxyException e) {
 			e.printStackTrace();
