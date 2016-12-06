@@ -77,6 +77,7 @@ public class Spotter extends Agent{
             	 	     send(res);
             	 	     alreadySent=true;
             	 	     stopped=false;
+            	 	   
                      }else if(msg.getContent().equals("ready") && alreadySent){
                     	 
                     	 ACLMessage res = new ACLMessage(ACLMessage.INFORM);
@@ -92,7 +93,7 @@ public class Spotter extends Agent{
 	}
 
 	
-	@ScheduledMethod(start = 2, interval = 10000)
+	@ScheduledMethod(start = 2, interval = 1)
 	public void stepSpotter() {
 		
 		ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
@@ -109,7 +110,7 @@ public class Spotter extends Agent{
 			if(elemento instanceof Mine)
 			{		
 				//if(){
-					if(!visitados.contains(((Mine) elemento).id)&& !stopped ){
+					if(!visitados.contains(((Mine) elemento).id)&& !stopped && !((Mine) elemento).explored ){
 
 						//System.out.println("entrou aqui ");
 						    minepoint = space.getLocation(elemento);
@@ -132,6 +133,10 @@ public class Spotter extends Agent{
 			if(isOnTopMine(minepoint,myPoint)){
 				visitados.add(((Mine) mina).id);
 				stopped=true;
+				
+				((Mine) mina).explored=true;
+				
+				
 			}else{
 				moveTowards(minepoint);
 			}

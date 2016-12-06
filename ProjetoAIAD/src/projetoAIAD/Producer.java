@@ -116,7 +116,7 @@ public class Producer extends Agent{
 	}
 	
 	
-	@ScheduledMethod(start = 2, interval = 10000)
+	@ScheduledMethod(start = 2, interval = 1)
 	public void stepProducer() {
 	
 		if(working){

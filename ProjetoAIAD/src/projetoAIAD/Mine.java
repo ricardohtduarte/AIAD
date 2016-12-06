@@ -5,7 +5,8 @@ public class Mine {
 	private int mine_quantity;
 	private int coordX;
 	private int coordY;
-	boolean alreadyExplored=false;
+	boolean explored=false;
+	
 	int id;
 	
 	public Mine(int id,int mine_quantity){
@@ -14,7 +15,7 @@ public class Mine {
 		
 	}
 	
-	
+
 	
 	public int getQuantity(){
 		return mine_quantity;

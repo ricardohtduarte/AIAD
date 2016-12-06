@@ -38,7 +38,7 @@ public class MarsBuilder implements ContextBuilder<Object> {
 				new GridBuilderParameters<Object>(new WrapAroundBorders(),
 						new SimpleGridAdder<Object>(), true, WIDTH, HEIGHT));
 		
-		int mineCount = 20;
+		int mineCount = 30;
 		for(int i = 0; i < mineCount; i++){
 			Mine mine = new Mine(i,50);
 			context.add(mine);
