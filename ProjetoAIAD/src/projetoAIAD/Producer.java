@@ -2,55 +2,27 @@ package projetoAIAD;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-import jade.lang.acl.ACLMessage;
-import repast.simphony.context.Context;
 import repast.simphony.engine.schedule.ScheduledMethod;
-import repast.simphony.query.space.continuous.ContinuousWithin;
 import repast.simphony.space.SpatialMath;
-import repast.simphony.space.continuous.ContinuousSpace;
 import repast.simphony.space.continuous.NdPoint;
-import sajas.core.AID;
-import sajas.core.Agent;
-import sajas.core.behaviours.*;
 
-public class Spotter extends MarsAgent{
-	
+public class Producer extends MarsAgent{
+	private int id;
 	private Random random = new Random();
 	private Double angle = null;
 	private final double randomness = 0.05;
-	private int id;
 	
-	Spotter(int id)
+	Producer(int id)
 	{
 		super();
 		this.id = id;
 	}
 	
-
 	@ScheduledMethod(start = 2, interval = 100000)
-	public void stepSpotter() {
-		
-		ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
-    
-    	 NdPoint myPoint = space.getLocation(new AID( "Spotter 1" , AID.ISLOCALNAME));
-    	 ContinuousWithin<Object> t = new ContinuousWithin<Object>(space, (Object)this, 2.0);
-    	 Iterator<Object> iterador = t.query().iterator();
-    	 
-    	 while(iterador.hasNext())
-    	 {
-    		 Object elemento = iterador.next();
-    		 if(elemento instanceof Spotter && ((Spotter) elemento).id != this.id)
-    		 {
-    			 msg.setContent( ((Spotter) elemento).id + " estas perto de mim " + this.id );
-    			 msg.addReceiver( new AID( "Spotter " + ((Spotter) elemento).id, AID.ISLOCALNAME) );
-    	 	     send(msg);
-    		 } 
-    	 }
-	     
+	public void stepProducer() {
 		double rand = random.nextDouble();
 		if (angle != null && rand > randomness )
 			moveByAngle(this.angle);
@@ -107,4 +79,5 @@ public class Spotter extends MarsAgent{
 		Collections.shuffle(emptySites);
 		return emptySites;
 	}
+	
 }

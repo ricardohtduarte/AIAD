@@ -4,7 +4,9 @@
 	<parameter name="randomSeed" displayName="Default Random Seed" type="int" defaultValue="__NULL__" />
 	
 	<parameter name="spotter_count" displayName="Spotter Count" type="int" defaultValue="1" isReadOnly="false" converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
-
+	
 	<parameter name="producer_count" displayName="Producer Count" type="int" defaultValue="1" isReadOnly="false" converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
+
+	
 
 </parameters>

@@ -52,6 +52,12 @@ public class MarsLauncher extends RepastSLauncher{
 				agentContainer.acceptNewAgent("Spotter " + i, spotter).start();
 			}
 			
+			//create producers 
+			int producerCount =  (Integer) params.getValue("producer_count");
+			for (int i = 0; i < producerCount; i++) {
+				Producer producer = new Producer(i);
+				agentContainer.acceptNewAgent("Producer " + i, producer).start();
+			}
 			
 			ContinuousSpace<Object> space = ((ContinuousSpace<Object>)this.context.getProjection("space"));
 			for (Object obj : context.getObjects(MarsAgent.class))

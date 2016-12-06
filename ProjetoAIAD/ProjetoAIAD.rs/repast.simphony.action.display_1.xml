@@ -7,6 +7,10 @@
       <string>repast.simphony.visualization.editedStyle.EditedStyle2D</string>
     </entry>
     <entry>
+      <string>projetoAIAD.Producer</string>
+      <string>repast.simphony.visualization.editedStyle.EditedStyle2D</string>
+    </entry>
+    <entry>
       <string>projetoAIAD.Spotter</string>
       <string>repast.simphony.visualizationOGL2D.DefaultStyleOGL2D</string>
     </entry>
@@ -15,6 +19,10 @@
     <entry>
       <string>projetoAIAD.Mine</string>
       <string>projetoAIAD.Mine.style_4.xml</string>
+    </entry>
+    <entry>
+      <string>projetoAIAD.Producer</string>
+      <string>projetoAIAD.Producer.style_2.xml</string>
     </entry>
     <entry>
       <string>projetoAIAD.Spotter</string>
@@ -31,7 +39,7 @@
     <pType>LAST</pType>
     <duration>-1.0</duration>
     <frequency>REPEAT</frequency>
-    <hashCode>1900788265</hashCode>
+    <hashCode>-1019531198</hashCode>
   </schedParams>
   <layoutClassName>foo.bar.baz</layoutClassName>
   <layoutProjection>space</layoutProjection>
@@ -39,11 +47,15 @@
   <layerOrder>
     <entry>
       <string>projetoAIAD.Mine</string>
+      <int>1</int>
+    </entry>
+    <entry>
+      <string>projetoAIAD.Producer</string>
       <int>0</int>
     </entry>
     <entry>
       <string>projetoAIAD.Spotter</string>
-      <int>1</int>
+      <int>2</int>
     </entry>
   </layerOrder>
   <projections>
