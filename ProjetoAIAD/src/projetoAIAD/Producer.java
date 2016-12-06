@@ -21,6 +21,10 @@ public class Producer extends MarsAgent{
 		this.id = id;
 	}
 	
+	int getId(){
+		return id;
+	}
+	
 	@ScheduledMethod(start = 2, interval = 100000)
 	public void stepProducer() {
 		double rand = random.nextDouble();

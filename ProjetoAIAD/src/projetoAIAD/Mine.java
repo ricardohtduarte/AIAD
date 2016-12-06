@@ -10,4 +10,8 @@ public class Mine {
 		this.mine_quantity = mine_quantity;
 		
 	}
+	
+	public int getQuantity(){
+		return mine_quantity;
+	}
 }
