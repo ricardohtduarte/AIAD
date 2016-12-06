@@ -5,15 +5,19 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+import jade.lang.acl.ACLMessage;
 import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.space.SpatialMath;
 import repast.simphony.space.continuous.NdPoint;
+import sajas.core.AID;
 
 public class Producer extends MarsAgent{
 	private int id;
 	private Random random = new Random();
 	private Double angle = null;
 	private final double randomness = 0.05;
+	
+	private boolean alreadySent=false;
 	
 	Producer(int id)
 	{
@@ -28,6 +32,21 @@ public class Producer extends MarsAgent{
 	
 	@ScheduledMethod(start = 2, interval = 10000)
 	public void stepProducer() {
+		
+		if(!alreadySent)
+		if(super.sender!=null){
+			ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
+			msg.setContent("ok" );
+			 msg.addReceiver(super.sender);
+	 	     send(msg);
+	 	     alreadySent=true;
+		}
+		
+		normalMovement();
+		
+	}
+	
+	public void normalMovement(){
 		double rand = random.nextDouble();
 		if (angle != null && rand > randomness )
 			moveByAngle(this.angle);

@@ -2,6 +2,7 @@ package projetoAIAD;
 
 import java.util.ArrayList;
 
+import jade.core.AID;
 import jade.lang.acl.ACLMessage;
 import repast.simphony.context.Context;
 import repast.simphony.space.continuous.ContinuousSpace;
@@ -16,6 +17,8 @@ public class MarsAgent extends Agent{
 	protected ContinuousSpace<Object> space;
 	protected Grid<Object> grid;
 	protected boolean recebeu=true;
+	
+	protected AID sender=null;
 	
 	public MarsAgent() {
 		super();	
@@ -41,9 +44,21 @@ public class MarsAgent extends Agent{
              public void action() 
              {
             	 ACLMessage msg;
-
-                 while ((msg = receive())!=null)
-                     System.out.println(msg.getContent());
+            	 
+                 while ((msg = receive())!=null){
+                	 
+                	 if(Producer.class.isAssignableFrom(myAgent.getClass())){
+                        	 sender=msg.getSender();
+                             System.out.println("Producer received: "+msg.getContent());
+                       
+              		}else if(Spotter.class.isAssignableFrom(myAgent.getClass())){
+              			System.out.println("Spotter received:"+msg.getContent());
+              		}
+                	
+                 }
+                 
+                 
+                
              }
         });
 	}

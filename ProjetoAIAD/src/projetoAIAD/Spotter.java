@@ -77,7 +77,6 @@ public class Spotter extends MarsAgent{
 		if(minepoint!=null && myPoint!=null){
 			if(isOnTopMine(minepoint,myPoint)){
 				visitados.add(((Mine) mina).id);
-				System.out.println(visitados.size());
 				stopped=true;
 			}else{
 				moveTowards(minepoint);
