@@ -30,6 +30,11 @@ public class Producer extends Agent{
 	
 	private ContinuousSpace<Object> space;
 	private Grid<Object> grid;
+	
+	private boolean working=false;
+	private boolean waiting=false;
+	private double mineX;
+	private double mineY;
 
 	
 	Producer(int id)
@@ -40,6 +45,19 @@ public class Producer extends Agent{
 	
 	int getId(){
 		return id;
+	}
+	
+	public static boolean isNumeric(String str)  
+	{  
+	  try  
+	  {  
+	    double d = Double.parseDouble(str);  
+	  }  
+	  catch(NumberFormatException nfe)  
+	  {  
+	    return false;  
+	  }  
+	  return true;  
 	}
 	
 	@Override
@@ -60,8 +78,36 @@ public class Producer extends Agent{
              {
             	 ACLMessage msg;
 
-                 while ((msg = receive())!=null)
-                     System.out.println(msg.getContent());
+                 while ((msg = receive())!=null){
+                     System.out.println("Producer RECEIVED:" + msg.getContent());
+                     
+                     if(msg.getContent().equals("yes")){
+                    	 working=true;
+                     }
+                     else if(msg.getContent().equals("no")){
+                    	 waiting=false;
+                     }
+                     else if(working){
+                    	 ACLMessage res = new ACLMessage(ACLMessage.INFORM);
+                    	 res.setContent("no");
+                    	 res.addReceiver( msg.getSender() );
+            	 	     send(res);
+                     }else{
+                    	 String[] splited = msg.getContent().split(" ");
+                    	 if(isNumeric(splited[0])&&isNumeric(splited[1]) && !waiting){
+                    		 mineX=Double.parseDouble(splited[0]);
+                    		 mineY=Double.parseDouble(splited[1]);
+                    		 
+                    		 ACLMessage res = new ACLMessage(ACLMessage.INFORM);
+                        	 res.setContent("ready");
+                        	 res.addReceiver( msg.getSender() );
+                	 	     send(res);
+                	 	     
+                    		 waiting=true;
+                    	 }
+                    	 
+                     }
+                 }
                  
                 
                  
@@ -73,8 +119,27 @@ public class Producer extends Agent{
 	@ScheduledMethod(start = 2, interval = 10000)
 	public void stepProducer() {
 	
+		if(working){
+			NdPoint mina= new NdPoint(mineX,mineY);
+			if(!isOnTopMine(mina,space.getLocation(this))){
+				moveTowards(mina);	
+			}
+			
+		}else if(waiting){
+			
+		}
+		else{
+			normalMovement();
+		}
 		
-		normalMovement();
+		
+		
+		
+	}
+	
+	public boolean isOnTopMine(NdPoint mine, NdPoint mypoint){
+		
+		return (Math.abs((int)mine.getX()-(int)mypoint.getX())<2 && Math.abs((int)mine.getY()-(int)mypoint.getY())<2);
 		
 	}
 	

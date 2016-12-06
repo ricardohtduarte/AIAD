@@ -31,12 +31,13 @@ public class Spotter extends Agent{
 	private final double randomness = 0.05;
 	private int id;
 	private Object mina=null;
-	private Object producer=null;
-
 	
+
 	private ArrayList<Integer> visitados= new ArrayList<>();
 
 	private boolean stopped = false;
+	
+	private boolean alreadySent=false;
 
 
 	Spotter(int id)
@@ -66,8 +67,26 @@ public class Spotter extends Agent{
              public void action() 
              {
             	 ACLMessage msg;
-                 while ((msg = receive())!=null)
-                     System.out.println(msg.getContent());
+                 while ((msg = receive())!=null){
+                     System.out.println("SPOTTER RECEIVED:" + msg.getContent());
+                  
+                     if(msg.getContent().equals("ready") && !alreadySent){
+                    	 ACLMessage res = new ACLMessage(ACLMessage.INFORM);
+                    	 res.setContent("yes");
+                    	 res.addReceiver( msg.getSender() );
+            	 	     send(res);
+            	 	     alreadySent=true;
+            	 	     stopped=false;
+                     }else if(msg.getContent().equals("ready") && alreadySent){
+                    	 
+                    	 ACLMessage res = new ACLMessage(ACLMessage.INFORM);
+                    	 res.setContent("no");
+                    	 res.addReceiver( msg.getSender() );
+            	 	     send(res);
+                     }
+                     
+                     
+                 }
              }
         });
 	}
@@ -89,16 +108,19 @@ public class Spotter extends Agent{
 			 elemento = iterador.next();
 			if(elemento instanceof Mine)
 			{		
-				if(!visitados.contains(((Mine) elemento).id)){
-					minepoint = space.getLocation(elemento);
-					mina=elemento;
-					//System.out.println("X: " + minepoint.getX() +  " Y: " + minepoint.getY() + " Quantity:" + ((Mine) elemento).getQuantity()+
-					//		" ID: "+((Mine) elemento).id);
-				}
-			}else if(elemento instanceof Producer  && mina!=null ){
+				//if(){
+					if(!visitados.contains(((Mine) elemento).id)&& !stopped ){
+
+						//System.out.println("entrou aqui ");
+						    minepoint = space.getLocation(elemento);
+							mina=elemento;
+							alreadySent=false;
+					}
+				//}
+			}else if(elemento instanceof Producer  && mina!=null && stopped){
 				 double x = space.getLocation(mina).getX();
 				 double y = space.getLocation(mina).getY();
-				 producer=elemento;
+			
     			 msg.setContent( x+" "+y );
     			 msg.addReceiver( new AID( "Producer " + ((Producer) elemento).getId(), AID.ISLOCALNAME) );
     	 	     send(msg);
@@ -115,11 +137,7 @@ public class Spotter extends Agent{
 			}
 		}
 		else if(stopped){
-			// ENVIA MENSAGEM AO PRODUCER
 			
-			//Isto faz reset para ele continuar a procurar
-				//mina=null;
-				//stopped=false;
 		}
 		else{
 			normalMovement();
