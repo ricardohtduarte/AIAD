@@ -25,8 +25,12 @@ public class Spotter extends MarsAgent{
 	private Double angle = null;
 	private final double randomness = 0.05;
 	private int id;
+	private Object mina=null;
+	private Object producer=null;
 
-	private boolean goingToMine = false;
+	
+	private ArrayList<Integer> visitados= new ArrayList<>();
+
 	private boolean stopped = false;
 
 
@@ -37,30 +41,66 @@ public class Spotter extends MarsAgent{
 	}
 
 
-	@ScheduledMethod(start = 2, interval = 100000)
+	@ScheduledMethod(start = 2, interval = 10000)
 	public void stepSpotter() {
-
+		
 		ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
 
-		NdPoint myPoint = space.getLocation(new AID( "Spotter 0" , AID.ISLOCALNAME));
+		NdPoint myPoint = space.getLocation(this);
 		ContinuousWithin<Object> t = new ContinuousWithin<Object>(space, (Object)this, 8.0);
 		Iterator<Object> iterador = t.query().iterator();
 		NdPoint minepoint = null;
+		Object elemento=null;
+		
 		while(iterador.hasNext())
 		{
-			Object elemento = iterador.next();
-			if(elemento instanceof Mine)
-			{
-				minepoint = space.getLocation(elemento);
-				System.out.println("X: " + minepoint.getX() +  " Y: " + minepoint.getY() + " Quantity:" + ((Mine) elemento).getQuantity());
-				goingToMine = true;
-			} 
+			 elemento = iterador.next();
+			if(elemento instanceof Mine && mina==null)
+			{		
+				if(!visitados.contains(((Mine) elemento).id)){
+					minepoint = space.getLocation(elemento);
+					mina=elemento;
+					//System.out.println("X: " + minepoint.getX() +  " Y: " + minepoint.getY() + " Quantity:" + ((Mine) elemento).getQuantity()+
+					//		" ID: "+((Mine) elemento).id);
+				}
+			}else if(elemento instanceof Producer && producer==null && mina!=null ){
+				 double x = space.getLocation(mina).getX();
+				 double y = space.getLocation(mina).getY();
+				 producer=elemento;
+    			 msg.setContent( x+" "+y );
+    			 msg.addReceiver( new AID( "Producer " + ((Producer) elemento).getId(), AID.ISLOCALNAME) );
+    	 	     send(msg);
+			}
 		}
-
-		normalMovement();
+		
+		
+		if(minepoint!=null && myPoint!=null){
+			if(isOnTopMine(minepoint,myPoint)){
+				visitados.add(((Mine) mina).id);
+				System.out.println(visitados.size());
+				stopped=true;
+			}else{
+				moveTowards(minepoint);
+			}
+		}
+		else if(stopped){
+			// ENVIA MENSAGEM AO PRODUCER
+			
+			//Isto faz reset para ele continuar a procurar
+				//mina=null;
+				//stopped=false;
+		}
+		else{
+			normalMovement();
+		}
 		
 	}
 
+	public boolean isOnTopMine(NdPoint mine, NdPoint mypoint){
+		
+		return (Math.abs((int)mine.getX()-(int)mypoint.getX())<2 && Math.abs((int)mine.getY()-(int)mypoint.getY())<2);
+		
+	}
 
 	public void normalMovement(){
 		double rand = random.nextDouble();

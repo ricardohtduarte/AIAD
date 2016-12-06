@@ -40,7 +40,7 @@ public class MarsBuilder implements ContextBuilder<Object> {
 		
 		int mineCount = 15;
 		for(int i = 0; i < mineCount; i++){
-			Mine mine = new Mine(50);
+			Mine mine = new Mine(i,50);
 			context.add(mine);
 		}
 		

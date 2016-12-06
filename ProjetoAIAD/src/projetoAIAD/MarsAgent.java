@@ -15,7 +15,7 @@ import sajas.core.behaviours.*;
 public class MarsAgent extends Agent{
 	protected ContinuousSpace<Object> space;
 	protected Grid<Object> grid;
-	
+	protected boolean recebeu=true;
 	
 	public MarsAgent() {
 		super();	
@@ -30,11 +30,18 @@ public class MarsAgent extends Agent{
 		grid = (Grid<Object>)context.getProjection("grid");
 		grid.moveTo(this, (int) pt.getX(), (int) pt.getY());
 		
+		/*
+		if(this.getClass().isAssignableFrom(Spotter.class)){
+			
+		}
+		*/
+		
 		addBehaviour(new CyclicBehaviour(this) 
         {
              public void action() 
              {
             	 ACLMessage msg;
+
                  while ((msg = receive())!=null)
                      System.out.println(msg.getContent());
              }

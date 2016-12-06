@@ -5,9 +5,11 @@ public class Mine {
 	private int mine_quantity;
 	private int coordX;
 	private int coordY;
+	int id;
 	
-	public Mine(int mine_quantity){
+	public Mine(int id,int mine_quantity){
 		this.mine_quantity = mine_quantity;
+		this.id=id;
 		
 	}
 	

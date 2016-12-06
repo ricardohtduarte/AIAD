@@ -25,7 +25,8 @@ public class Producer extends MarsAgent{
 		return id;
 	}
 	
-	@ScheduledMethod(start = 2, interval = 100000)
+	
+	@ScheduledMethod(start = 2, interval = 10000)
 	public void stepProducer() {
 		double rand = random.nextDouble();
 		if (angle != null && rand > randomness )
