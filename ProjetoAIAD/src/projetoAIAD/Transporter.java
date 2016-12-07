@@ -37,6 +37,7 @@ public class Transporter extends Agent{
 	private double mineY;
 
 	private boolean stopped = false;
+	private boolean waiting = false;
 
 
 	Transporter(int id)
@@ -71,9 +72,12 @@ public class Transporter extends Agent{
                      if(msg.getContent().equals("yes")){
                     	 transporting=true;
                      }
-                     else if(transporting){
+                     else if(msg.getContent().equals("no")){
+                    	 waiting=false;
+                     }
+                     else if(transporting ||waiting){
                     	 ACLMessage res = new ACLMessage(ACLMessage.INFORM);
-                    	 res.setContent("no");
+                    	 res.setContent("no producer");
                     	 res.addReceiver( msg.getSender() );
             	 	     send(res);
                      }else{
@@ -83,11 +87,11 @@ public class Transporter extends Agent{
                     		 mineY=Double.parseDouble(splited[1]);
                     		 
                     		 ACLMessage res = new ACLMessage(ACLMessage.INFORM);
-                        	 res.setContent("ready");
+                        	 res.setContent("ready producer");
                         	 res.addReceiver( msg.getSender() );
                 	 	     send(res);
                 	 	     
-                    		 transporting = false;
+                    		 waiting = true;
                     	 }
                     	 
                      }
@@ -111,13 +115,17 @@ public class Transporter extends Agent{
 	  return true;  
 	}
 
-	@ScheduledMethod(start = 2, interval = 100000)
+	@ScheduledMethod(start = 2, interval = 1)
 	public void stepTransporter() {
+				
 		if(transporting){
 			NdPoint mina= new NdPoint(mineX,mineY);
 			if(!isOnTopMine(mina,space.getLocation(this))){
 				moveTowards(mina);	
 			}
+			
+		}else if(waiting){
+			
 		}
 		else{
 			normalMovement();

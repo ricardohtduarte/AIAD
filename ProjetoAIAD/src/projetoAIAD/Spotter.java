@@ -93,7 +93,7 @@ public class Spotter extends Agent{
 	}
 
 	
-	@ScheduledMethod(start = 2, interval = 100000)
+	@ScheduledMethod(start = 2, interval = 1)
 	public void stepSpotter() {
 		
 		ACLMessage msg = new ACLMessage(ACLMessage.INFORM);

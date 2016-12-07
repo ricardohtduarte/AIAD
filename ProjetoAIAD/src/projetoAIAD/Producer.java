@@ -35,6 +35,7 @@ public class Producer extends Agent{
 	
 	private boolean working=false;
 	private boolean waiting=false;
+	private boolean alreadySent=false;
 	private double mineX;
 	private double mineY;
 
@@ -83,18 +84,35 @@ public class Producer extends Agent{
                  while ((msg = receive())!=null){
                      System.out.println("Producer RECEIVED:" + msg.getContent());
                      
-                     if(msg.getContent().equals("yes")){
+                     if(msg.getContent().equals("ready producer") && !alreadySent){
+                    	 ACLMessage res = new ACLMessage(ACLMessage.INFORM);
+                    	 res.setContent("yes");
+                    	 res.addReceiver( msg.getSender() );
+            	 	     send(res);
+            	 	     alreadySent=true;
+            	 	     working=false;
+            	 	     waiting=false;
+            	 	   
+                     }else if(msg.getContent().equals("ready producer") && alreadySent){
+                    	 
+                    	 ACLMessage res = new ACLMessage(ACLMessage.INFORM);
+                    	 res.setContent("no");
+                    	 res.addReceiver( msg.getSender() );
+            	 	     send(res);
+                     }
+                     else if(msg.getContent().equals("yes")){
                     	 working=true;
                      }
                      else if(msg.getContent().equals("no")){
                     	 waiting=false;
                      }
-                     else if(working){
+                     else if(working || waiting){
                     	 ACLMessage res = new ACLMessage(ACLMessage.INFORM);
                     	 res.setContent("no");
                     	 res.addReceiver( msg.getSender() );
             	 	     send(res);
-                     }else{
+                     }
+                     else{
                     	 String[] splited = msg.getContent().split(" ");
                     	 if(isNumeric(splited[0])&&isNumeric(splited[1]) && !waiting){
                     		 mineX=Double.parseDouble(splited[0]);
@@ -115,7 +133,7 @@ public class Producer extends Agent{
 	}
 	
 	
-	@ScheduledMethod(start = 2, interval = 100000)
+	@ScheduledMethod(start = 2, interval = 1)
 	public void stepProducer() {
 		
 		ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
@@ -127,10 +145,11 @@ public class Producer extends Agent{
 		while(iterador.hasNext())
 		{
 			 elemento = iterador.next();
-			 if(elemento instanceof Producer){
+			 if(elemento instanceof Transporter && working){
     			 msg.setContent(mineX+" "+ mineY);
-    			 msg.addReceiver( new AID( "Transporter " + ((Producer) elemento).getId(), AID.ISLOCALNAME) );
+    			 msg.addReceiver( new AID( "Transporter " + ((Transporter) elemento).getId(), AID.ISLOCALNAME) );
     	 	     send(msg);
+    	 	     alreadySent=false;
 			}
 		}
 		
