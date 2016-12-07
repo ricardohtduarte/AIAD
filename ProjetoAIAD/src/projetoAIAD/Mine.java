@@ -7,10 +7,9 @@ public class Mine {
 	private int coordX;
 	private int coordY;
 	boolean explored=false;
+	boolean mined=false;
 	
 	int id;
-	
-	
 	
 	public Mine(int id,int mine_quantity){
 		this.mine_quantity = mine_quantity;
@@ -28,6 +27,7 @@ public class Mine {
 	
 	public void incrementQuantidadeMinada(){
 		quantidadeMinada++;
+		mine_quantity--;
 	}
 		
 	public int getQuantity(){

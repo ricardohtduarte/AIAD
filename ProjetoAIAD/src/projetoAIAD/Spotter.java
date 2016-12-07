@@ -30,10 +30,7 @@ public class Spotter extends Agent{
 	private Double angle = null;
 	private final double randomness = 0.05;
 	private int id;
-	private Object mina=null;
-	
-
-	private ArrayList<Integer> visitados= new ArrayList<>();
+	private Object mina=null;	
 
 	private boolean stopped = false;
 	
@@ -68,7 +65,7 @@ public class Spotter extends Agent{
              {
             	 ACLMessage msg;
                  while ((msg = receive())!=null){
-                     System.out.println("SPOTTER RECEIVED:" + msg.getContent());
+                    // System.out.println("SPOTTER RECEIVED:" + msg.getContent());
                   
                      if(msg.getContent().equals("ready") && !alreadySent){
                     	 ACLMessage res = new ACLMessage(ACLMessage.INFORM);
@@ -76,7 +73,8 @@ public class Spotter extends Agent{
                     	 res.addReceiver( msg.getSender() );
             	 	     send(res);
             	 	     alreadySent=true;
-            	 	     stopped=false;
+            	 	     mina=null;
+            	       	 stopped=false;
             	 	   
                      }else if(msg.getContent().equals("ready") && alreadySent){
                     	 
@@ -87,6 +85,8 @@ public class Spotter extends Agent{
                      }
                      
                      
+                     
+                     
                  }
              }
         });
@@ -95,6 +95,7 @@ public class Spotter extends Agent{
 	
 	@ScheduledMethod(start = 2, interval = 1)
 	public void stepSpotter() {
+		
 		
 		ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
 
@@ -109,31 +110,32 @@ public class Spotter extends Agent{
 			 elemento = iterador.next();
 			if(elemento instanceof Mine)
 			{		
-				//if(){
-					if(!visitados.contains(((Mine) elemento).id)&& !stopped && !((Mine) elemento).explored ){
-
-						//System.out.println("entrou aqui ");
+				
+				if(!stopped && !((Mine) elemento).explored ){
 						    minepoint = space.getLocation(elemento);
 							mina=elemento;
-							alreadySent=false;
-					}
-				//}
-			}else if(elemento instanceof Producer  && mina!=null && stopped){
-				 double x = space.getLocation(mina).getX();
-				 double y = space.getLocation(mina).getY();
+			}
+		
+			}else if(elemento instanceof Producer && !alreadySent && mina!=null && stopped){
+				
 			
-    			 msg.setContent( x+" "+y+" "+ ((Mine) mina).getID() );
-    			 msg.addReceiver( new AID( "Producer " + ((Producer) elemento).getId(), AID.ISLOCALNAME) );
-    	 	     send(msg);
+					 double x = space.getLocation(mina).getX();
+					 double y = space.getLocation(mina).getY();
+					 
+	    			 
+					 msg.setContent( x+" "+y+" "+ ((Mine) mina).getID() );
+	    			 msg.addReceiver( new AID( "Producer " + ((Producer) elemento).getId(), AID.ISLOCALNAME) );
+	    	 	     send(msg);
+			
 			}
 		}
 		
 		
 		if(minepoint!=null && myPoint!=null){
 			if(isOnTopMine(minepoint,myPoint)){
-				visitados.add(((Mine) mina).id);
 				stopped=true;
-				
+
+				alreadySent=false;
 				((Mine) mina).explored=true;
 				
 				

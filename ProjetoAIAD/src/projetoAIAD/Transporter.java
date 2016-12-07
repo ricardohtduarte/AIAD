@@ -56,6 +56,10 @@ public class Transporter extends Agent{
 		return id;
 	}
 
+	public int getquantidade(){
+		return quantidadeTransportada;
+	}
+	
 	@Override
 	public void setup(){
 		super.setup();
@@ -73,15 +77,15 @@ public class Transporter extends Agent{
             	 ACLMessage msg;
 
                  while ((msg = receive())!=null){
-                     System.out.println("Transporter RECEIVED:" + msg.getContent());
-                     
+                	// System.out.println("ID " + id+"   Transporter RECEIVED:" + msg.getContent()+ "- SENDER "+ msg.getSender());
+                      
                      if(msg.getContent().equals("yes")){
                     	 transporting=true;
                      }
                      else if(msg.getContent().equals("no")){
                     	 waiting=false;
                      }
-                     else if(transporting  || movingToBase){
+                     else if(transporting ||waiting||stopped || movingToBase){
                     	 ACLMessage res = new ACLMessage(ACLMessage.INFORM);
                     	 res.setContent("no producer");
                     	 res.addReceiver( msg.getSender() );
@@ -134,11 +138,11 @@ public class Transporter extends Agent{
 		while(iterador.hasNext())
 		{
 			 elemento = iterador.next();
-			if(elemento instanceof Mine){
-				
+			if(elemento instanceof Mine ){
+	
 				if(minaObj!=null){
-					
 				}
+				
 				else if(((Mine)elemento).getID()==mineId){	
 					minaObj=elemento;
 				}		
@@ -160,9 +164,9 @@ public class Transporter extends Agent{
 					((Base) baseObj).setStoredQuantity(this.quantidadeTransportada);	
 					transporting=false;
 					movingToBase=false;
-
+					minaObj=null;
 		 	 	     this.quantidadeTransportada=0;
-					System.out.println(((Base) baseObj).getStoredQuantity());
+					System.out.println("Na base : "+((Base) baseObj).getStoredQuantity());
 					
 				}else{
 					moveTowards(base);
@@ -172,13 +176,13 @@ public class Transporter extends Agent{
 			else if(!isOnTopMine(mina,space.getLocation(this))){
 				moveTowards(mina);	
 			}else if(minaObj!=null){
-				 if(((Mine)minaObj).getQuantidadeMinada()<((Mine)minaObj).getQuantity()){
-					System.out.println("Estou à espera "+ ((Mine)minaObj).getQuantidadeMinada()+" /"+((Mine)minaObj).getQuantity());
-				}else {
+				 if(((Mine)minaObj).getQuantity()>0){
+					//System.out.println("ID:"+id+"  Estou à espera faltam  "+ ((Mine)minaObj).getQuantity()+" na mina "+((Mine)minaObj).id);
+				}else{
 					this.quantidadeTransportada=((Mine)minaObj).getQuantidadeMinada();
 					movingToBase=true;
 		 	 	     waiting=false;
-		 	 	     minaObj=null;
+		 	 	     
 				}
 			}	
 		}else if(waiting){

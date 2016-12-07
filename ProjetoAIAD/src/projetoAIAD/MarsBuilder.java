@@ -1,5 +1,7 @@
 package projetoAIAD;
 
+import java.util.Random;
+
 import repast.simphony.context.Context;
 import repast.simphony.context.DefaultContext;
 import repast.simphony.context.space.continuous.ContinuousSpaceFactory;
@@ -24,6 +26,8 @@ public class MarsBuilder implements ContextBuilder<Object> {
 	
 	final public static int WIDTH = 50;
 	final public static int HEIGHT = 50;
+
+	private Random random = new Random();
 	
 	@Override
 	public Context<Object> build(Context<Object> context) {
@@ -43,7 +47,7 @@ public class MarsBuilder implements ContextBuilder<Object> {
 		Parameters params = RunEnvironment.getInstance().getParameters();
 		int mineCount =  (Integer) params.getValue("mine_count");
 		for(int i = 0; i < mineCount; i++){
-			Mine mine = new Mine(i,50);
+			Mine mine = new Mine(i+1,50);
 			context.add(mine);
 		}
 		

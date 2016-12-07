@@ -4,7 +4,6 @@ public class Base {
 	
 	private int coordX;
 	private int coordY;
-	private int maxStore=100000;
 	
 	private int currentStore=0;
 	
@@ -17,10 +16,10 @@ public class Base {
 	
 
 	
-	public int getStoredQuantity(){
+	public synchronized int getStoredQuantity(){
 		return currentStore;
 	}
-	public void setStoredQuantity(int quantity){
+	public synchronized void setStoredQuantity(int quantity){
 		this.currentStore+=quantity;
 	}
 

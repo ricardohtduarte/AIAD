@@ -40,8 +40,9 @@ public class Producer extends Agent{
 	
 	private boolean alreadySent=false;
 	private double mineX;
-	private double mineY;
+	private double mineY=-1;
 	private int mineId;
+	
 	Object minaObj=null;
 
 	
@@ -87,7 +88,7 @@ public class Producer extends Agent{
             	 ACLMessage msg;
 
                  while ((msg = receive())!=null){
-                     System.out.println("Producer RECEIVED:" + msg.getContent());
+                   // System.out.println("ID " + id+"   Producer RECEIVED:" + msg.getContent()+ "- SENDER "+ msg.getSender());
                      
                      if(msg.getContent().equals("ready producer") && !alreadySent){
                     	 ACLMessage res = new ACLMessage(ACLMessage.INFORM);
@@ -106,6 +107,7 @@ public class Producer extends Agent{
                      }
                      else if(msg.getContent().equals("yes")){
                     	 working=true;
+                    	 
                      }
                      else if(msg.getContent().equals("no")){
                     	 waiting=false;
@@ -116,9 +118,9 @@ public class Producer extends Agent{
                     	 res.addReceiver( msg.getSender() );
             	 	     send(res);
                      }
-                     else{
+                     else if(!waiting){
                     	 String[] splited = msg.getContent().split(" ");
-                    	 if(isNumeric(splited[0])&&isNumeric(splited[1]) && !waiting){
+                    	 if(isNumeric(splited[0])&&isNumeric(splited[1])){
                     		 mineX=Double.parseDouble(splited[0]);
                     		 mineY=Double.parseDouble(splited[1]);
                     		 mineId=Integer.parseInt(splited[2]);
@@ -151,28 +153,33 @@ public class Producer extends Agent{
 		while(iterador.hasNext())
 		{
 			 elemento = iterador.next();
-			 if(elemento instanceof Transporter && working && !alreadySent){
+			 if(elemento instanceof Transporter && working && mineY!=-1&&minaObj!=null&& !alreadySent){
     			 msg.setContent(mineX+" "+ mineY+" "+mineId);
     			 msg.addReceiver( new AID( "Transporter " + ((Transporter) elemento).getId(), AID.ISLOCALNAME) );
     	 	     send(msg);
 			}else if(elemento instanceof Mine){
+				
 				if(((Mine)elemento).getID()==mineId){	
 					minaObj=elemento;
+
 				}
 			}
 		}
 		
 		if(working){
+			
 			NdPoint mina= new NdPoint(mineX,mineY);
 			if(!isOnTopMine(mina,space.getLocation(this))){
 				moveTowards(mina);	
 			}else if(minaObj!=null){
-				 if(((Mine)minaObj).getQuantidadeMinada()<((Mine)minaObj).getQuantity()){
+				 if(((Mine)minaObj).getQuantity()>0){
 					((Mine)minaObj).incrementQuantidadeMinada();
-					System.out.println("Estou a trabalhar "+ ((Mine)minaObj).getQuantidadeMinada()+" /"+((Mine)minaObj).getQuantity());
-				}else if(alreadySent && ((Mine)minaObj).getQuantidadeMinada()==((Mine)minaObj).getQuantity()){
-					
-					System.out.println("Parei de trabalhar");
+					System.out.println("ID:"+id+"  Estou a trabalhar faltam:" + ((Mine)minaObj).getQuantity()+" na mina "+((Mine)minaObj).getID() );
+				}else if(alreadySent){	
+					System.out.println("ID:"+id+"  Parei de trabalhar");
+					 
+					 mineY=-1;
+					 
 					 working=false;
 		 	 	     waiting=false;
 		 	 	     minaObj=null;
