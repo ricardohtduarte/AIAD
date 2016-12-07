@@ -12,11 +12,13 @@ import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.engine.schedule.ISchedule;
 import repast.simphony.engine.schedule.ScheduleParameters;
 import repast.simphony.engine.schedule.ScheduledMethod;
+import repast.simphony.parameter.Parameters;
 import repast.simphony.space.continuous.RandomCartesianAdder;
 import repast.simphony.space.grid.GridBuilderParameters;
 import repast.simphony.space.grid.SimpleGridAdder;
 import repast.simphony.space.grid.StrictBorders;
 import repast.simphony.space.grid.WrapAroundBorders;
+import repast.simphony.util.ContextUtils;
 
 public class MarsBuilder implements ContextBuilder<Object> {
 	
@@ -38,11 +40,21 @@ public class MarsBuilder implements ContextBuilder<Object> {
 				new GridBuilderParameters<Object>(new WrapAroundBorders(),
 						new SimpleGridAdder<Object>(), true, WIDTH, HEIGHT));
 		
-		int mineCount = 2;
+		Parameters params = RunEnvironment.getInstance().getParameters();
+		int mineCount =  (Integer) params.getValue("mine_count");
 		for(int i = 0; i < mineCount; i++){
 			Mine mine = new Mine(i,50);
 			context.add(mine);
 		}
+		
+		//base
+		
+		Base base= new Base(1);
+		
+		context.add(base);
+		
+	
+		
 		
 		return context;
 	}

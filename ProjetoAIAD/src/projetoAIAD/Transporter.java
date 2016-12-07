@@ -30,14 +30,20 @@ public class Transporter extends Agent{
 	private Double angle = null;
 	private final double randomness = 0.05;
 	private int id;
+	private int quantidadeTransportada;
 	
+	
+	Object minaObj =null;
+	Object baseObj =null;
 	private boolean transporting = false;
 	
 	private double mineX;
 	private double mineY;
+	private int mineId;
 
 	private boolean stopped = false;
 	private boolean waiting = false;
+	private boolean movingToBase=false;
 
 
 	Transporter(int id)
@@ -75,7 +81,7 @@ public class Transporter extends Agent{
                      else if(msg.getContent().equals("no")){
                     	 waiting=false;
                      }
-                     else if(transporting ||waiting){
+                     else if(transporting  || movingToBase){
                     	 ACLMessage res = new ACLMessage(ACLMessage.INFORM);
                     	 res.setContent("no producer");
                     	 res.addReceiver( msg.getSender() );
@@ -85,6 +91,8 @@ public class Transporter extends Agent{
                     	 if(isNumeric(splited[0])&&isNumeric(splited[1]) && !transporting){
                     		 mineX=Double.parseDouble(splited[0]);
                     		 mineY=Double.parseDouble(splited[1]);
+                    		 mineId=Integer.parseInt(splited[2]);
+                    		 
                     		 
                     		 ACLMessage res = new ACLMessage(ACLMessage.INFORM);
                         	 res.setContent("ready producer");
@@ -117,13 +125,62 @@ public class Transporter extends Agent{
 
 	@ScheduledMethod(start = 2, interval = 1)
 	public void stepTransporter() {
+		NdPoint myPoint = space.getLocation(this);
+		ContinuousWithin<Object> t = new ContinuousWithin<Object>(space, (Object)this, 8.0);
+		Iterator<Object> iterador = t.query().iterator();
+		NdPoint minepoint = null;
+		Object elemento=null;
+		
+		while(iterador.hasNext())
+		{
+			 elemento = iterador.next();
+			if(elemento instanceof Mine){
 				
+				if(minaObj!=null){
+					
+				}
+				else if(((Mine)elemento).getID()==mineId){	
+					minaObj=elemento;
+				}		
+			}else if(elemento instanceof Base){
+				if(baseObj!=null){				
+				}
+				else{
+					baseObj=elemento;
+				}
+			}
+		}
+
 		if(transporting){
 			NdPoint mina= new NdPoint(mineX,mineY);
-			if(!isOnTopMine(mina,space.getLocation(this))){
-				moveTowards(mina);	
+	
+			if(movingToBase){
+				NdPoint base= new NdPoint(25,25);
+				if(isOnTopMine(base,space.getLocation(this))){	
+					((Base) baseObj).setStoredQuantity(this.quantidadeTransportada);	
+					transporting=false;
+					movingToBase=false;
+
+		 	 	     this.quantidadeTransportada=0;
+					System.out.println(((Base) baseObj).getStoredQuantity());
+					
+				}else{
+					moveTowards(base);
+				}
+				
 			}
-			
+			else if(!isOnTopMine(mina,space.getLocation(this))){
+				moveTowards(mina);	
+			}else if(minaObj!=null){
+				 if(((Mine)minaObj).getQuantidadeMinada()<((Mine)minaObj).getQuantity()){
+					System.out.println("Estou à espera "+ ((Mine)minaObj).getQuantidadeMinada()+" /"+((Mine)minaObj).getQuantity());
+				}else {
+					this.quantidadeTransportada=((Mine)minaObj).getQuantidadeMinada();
+					movingToBase=true;
+		 	 	     waiting=false;
+		 	 	     minaObj=null;
+				}
+			}	
 		}else if(waiting){
 			
 		}

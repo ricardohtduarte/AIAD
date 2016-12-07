@@ -35,9 +35,14 @@ public class Producer extends Agent{
 	
 	private boolean working=false;
 	private boolean waiting=false;
+
+	private boolean producing=false;
+	
 	private boolean alreadySent=false;
 	private double mineX;
 	private double mineY;
+	private int mineId;
+	Object minaObj=null;
 
 	
 	Producer(int id)
@@ -90,8 +95,7 @@ public class Producer extends Agent{
                     	 res.addReceiver( msg.getSender() );
             	 	     send(res);
             	 	     alreadySent=true;
-            	 	     working=false;
-            	 	     waiting=false;
+            	 	   
             	 	   
                      }else if(msg.getContent().equals("ready producer") && alreadySent){
                     	 
@@ -117,6 +121,8 @@ public class Producer extends Agent{
                     	 if(isNumeric(splited[0])&&isNumeric(splited[1]) && !waiting){
                     		 mineX=Double.parseDouble(splited[0]);
                     		 mineY=Double.parseDouble(splited[1]);
+                    		 mineId=Integer.parseInt(splited[2]);
+                    		 
                     		 
                     		 ACLMessage res = new ACLMessage(ACLMessage.INFORM);
                         	 res.setContent("ready");
@@ -145,19 +151,33 @@ public class Producer extends Agent{
 		while(iterador.hasNext())
 		{
 			 elemento = iterador.next();
-			 if(elemento instanceof Transporter && working){
-    			 msg.setContent(mineX+" "+ mineY);
+			 if(elemento instanceof Transporter && working && !alreadySent){
+    			 msg.setContent(mineX+" "+ mineY+" "+mineId);
     			 msg.addReceiver( new AID( "Transporter " + ((Transporter) elemento).getId(), AID.ISLOCALNAME) );
     	 	     send(msg);
-    	 	     alreadySent=false;
+			}else if(elemento instanceof Mine){
+				if(((Mine)elemento).getID()==mineId){	
+					minaObj=elemento;
+				}
 			}
 		}
-		
 		
 		if(working){
 			NdPoint mina= new NdPoint(mineX,mineY);
 			if(!isOnTopMine(mina,space.getLocation(this))){
 				moveTowards(mina);	
+			}else if(minaObj!=null){
+				 if(((Mine)minaObj).getQuantidadeMinada()<((Mine)minaObj).getQuantity()){
+					((Mine)minaObj).incrementQuantidadeMinada();
+					System.out.println("Estou a trabalhar "+ ((Mine)minaObj).getQuantidadeMinada()+" /"+((Mine)minaObj).getQuantity());
+				}else if(alreadySent && ((Mine)minaObj).getQuantidadeMinada()==((Mine)minaObj).getQuantity()){
+					
+					System.out.println("Parei de trabalhar");
+					 working=false;
+		 	 	     waiting=false;
+		 	 	     minaObj=null;
+		 	 	     alreadySent=false;
+				}
 			}
 			
 		}else if(waiting){

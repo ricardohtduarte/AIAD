@@ -122,7 +122,7 @@ public class Spotter extends Agent{
 				 double x = space.getLocation(mina).getX();
 				 double y = space.getLocation(mina).getY();
 			
-    			 msg.setContent( x+" "+y );
+    			 msg.setContent( x+" "+y+" "+ ((Mine) mina).getID() );
     			 msg.addReceiver( new AID( "Producer " + ((Producer) elemento).getId(), AID.ISLOCALNAME) );
     	 	     send(msg);
 			}

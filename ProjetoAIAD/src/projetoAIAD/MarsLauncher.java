@@ -25,7 +25,7 @@ public class MarsLauncher extends RepastSLauncher{
 
 	private ContainerController mainContainer;
 	private ContainerController agentContainer;
-	private double[] startPoint = new double[]{20,20};
+	private double[] startPoint = new double[]{25,25};
 	private Context<Object> context = null;
 
 	@Override
@@ -67,15 +67,24 @@ public class MarsLauncher extends RepastSLauncher{
 			}
 			
 			
+			
 			ContinuousSpace<Object> space = ((ContinuousSpace<Object>)this.context.getProjection("space"));
-			/*for (Object obj : context.getObjects(Producer.class))
+			for (Object obj : context.getObjects(Producer.class))
 			{
 				space.moveTo(obj, startPoint);
 			}
 			for (Object obj : context.getObjects(Spotter.class))
 			{
 				space.moveTo(obj, startPoint);
-			}*/
+			}
+			for (Object obj : context.getObjects(Transporter.class))
+			{
+				space.moveTo(obj, startPoint);
+			}
+			for (Object obj : context.getObjects(Base.class))
+			{
+				space.moveTo(obj, startPoint);
+			}
 			
 
 		} catch (StaleProxyException e) {
