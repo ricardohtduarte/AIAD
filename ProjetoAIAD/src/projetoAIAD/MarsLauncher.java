@@ -61,7 +61,7 @@ public class MarsLauncher extends RepastSLauncher{
 			
 			//create producers 
 			int transporterCount =  (Integer) params.getValue("transporter_count");
-			for (int i = 0; i < producerCount; i++) {
+			for (int i = 0; i < transporterCount; i++) {
 				Transporter transporter = new Transporter(i);
 				agentContainer.acceptNewAgent("Transporter " + i, transporter).start();
 			}

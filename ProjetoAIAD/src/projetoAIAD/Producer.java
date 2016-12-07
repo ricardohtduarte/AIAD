@@ -109,10 +109,7 @@ public class Producer extends Agent{
                     	 }
                     	 
                      }
-                 }
-                 
-                
-                 
+                 }      
              }
         });
 	}
@@ -131,7 +128,7 @@ public class Producer extends Agent{
 		{
 			 elemento = iterador.next();
 			 if(elemento instanceof Producer){
-    			 msg.setContent("Transporter ");
+    			 msg.setContent(mineX+" "+ mineY);
     			 msg.addReceiver( new AID( "Transporter " + ((Producer) elemento).getId(), AID.ISLOCALNAME) );
     	 	     send(msg);
 			}

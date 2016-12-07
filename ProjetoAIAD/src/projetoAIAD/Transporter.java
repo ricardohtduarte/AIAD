@@ -31,9 +31,10 @@ public class Transporter extends Agent{
 	private final double randomness = 0.05;
 	private int id;
 	
-
+	private boolean transporting = false;
 	
-	
+	private double mineX;
+	private double mineY;
 
 	private boolean stopped = false;
 
@@ -63,16 +64,65 @@ public class Transporter extends Agent{
              public void action() 
              {
             	 ACLMessage msg;
-                 while ((msg = receive())!=null)
-                     System.out.println(msg.getContent());
+
+                 while ((msg = receive())!=null){
+                     System.out.println("Transporter RECEIVED:" + msg.getContent());
+                     
+                     if(msg.getContent().equals("yes")){
+                    	 transporting=true;
+                     }
+                     else if(transporting){
+                    	 ACLMessage res = new ACLMessage(ACLMessage.INFORM);
+                    	 res.setContent("no");
+                    	 res.addReceiver( msg.getSender() );
+            	 	     send(res);
+                     }else{
+                    	 String[] splited = msg.getContent().split(" ");
+                    	 if(isNumeric(splited[0])&&isNumeric(splited[1]) && !transporting){
+                    		 mineX=Double.parseDouble(splited[0]);
+                    		 mineY=Double.parseDouble(splited[1]);
+                    		 
+                    		 ACLMessage res = new ACLMessage(ACLMessage.INFORM);
+                        	 res.setContent("ready");
+                        	 res.addReceiver( msg.getSender() );
+                	 	     send(res);
+                	 	     
+                    		 transporting = false;
+                    	 }
+                    	 
+                     }
+                 }
+                 
              }
         });
 	}
 
 	
+	public static boolean isNumeric(String str)  
+	{  
+	  try  
+	  {  
+	    double d = Double.parseDouble(str);  
+	  }  
+	  catch(NumberFormatException nfe)  
+	  {  
+	    return false;  
+	  }  
+	  return true;  
+	}
+
 	@ScheduledMethod(start = 2, interval = 100000)
 	public void stepTransporter() {
-		normalMovement(); 
+		if(transporting){
+			NdPoint mina= new NdPoint(mineX,mineY);
+			if(!isOnTopMine(mina,space.getLocation(this))){
+				moveTowards(mina);	
+			}
+		}
+		else{
+			normalMovement();
+		}
+		 
 	}
 
 	public boolean isOnTopMine(NdPoint mine, NdPoint mypoint){
