@@ -160,13 +160,17 @@ public class Transporter extends Agent{
 	
 			if(movingToBase){
 				NdPoint base= new NdPoint(25,25);
-				if(isOnTopMine(base,space.getLocation(this))){	
-					((Base) baseObj).setStoredQuantity(this.quantidadeTransportada);	
-					transporting=false;
-					movingToBase=false;
-					minaObj=null;
-		 	 	     this.quantidadeTransportada=0;
-					System.out.println("Na base : "+((Base) baseObj).getStoredQuantity());
+				if(isOnTopMine(base,space.getLocation(this))){
+					if(this.quantidadeTransportada>0){
+						((Base) baseObj).setStoredQuantity(1);	
+						this.quantidadeTransportada--;
+					}else{	
+						transporting=false;
+						movingToBase=false;
+						minaObj=null;
+			 	 	     this.quantidadeTransportada=0;
+						System.out.println("Na base : "+((Base) baseObj).getStoredQuantity());
+					}
 					
 				}else{
 					moveTowards(base);
@@ -179,9 +183,13 @@ public class Transporter extends Agent{
 				 if(((Mine)minaObj).getQuantity()>0){
 					//System.out.println("ID:"+id+"  Estou à espera faltam  "+ ((Mine)minaObj).getQuantity()+" na mina "+((Mine)minaObj).id);
 				}else{
-					this.quantidadeTransportada=((Mine)minaObj).getQuantidadeMinada();
-					movingToBase=true;
-		 	 	     waiting=false;
+					
+					if(this.quantidadeTransportada<((Mine)minaObj).getQuantidadeMinada()){
+						this.quantidadeTransportada++;
+					}else{
+						 movingToBase=true;
+			 	 	     waiting=false;
+					}
 		 	 	     
 				}
 			}	
