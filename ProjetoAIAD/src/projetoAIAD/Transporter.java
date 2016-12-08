@@ -31,7 +31,7 @@ public class Transporter extends Agent{
 	private final double randomness = 0.05;
 	private int id;
 	private int quantidadeTransportada;
-	
+	private int quantidadeTranportadaTotal;
 	
 	Object minaObj =null;
 	Object baseObj =null;
@@ -58,6 +58,10 @@ public class Transporter extends Agent{
 
 	public int getquantidade(){
 		return quantidadeTransportada;
+	}
+	
+	public int getQuantidadeTransportadaTotal(){
+		return quantidadeTranportadaTotal;
 	}
 	
 	@Override
@@ -180,11 +184,14 @@ public class Transporter extends Agent{
 			else if(!isOnTopMine(mina,space.getLocation(this))){
 				moveTowards(mina);	
 			}else if(minaObj!=null){
+				
+				
 				 if(((Mine)minaObj).getQuantity()>0){
 					//System.out.println("ID:"+id+"  Estou à espera faltam  "+ ((Mine)minaObj).getQuantity()+" na mina "+((Mine)minaObj).id);
 				}else{
 					
 					if(this.quantidadeTransportada<((Mine)minaObj).getQuantidadeMinada()){
+						this.quantidadeTranportadaTotal++;
 						this.quantidadeTransportada++;
 					}else{
 						 movingToBase=true;

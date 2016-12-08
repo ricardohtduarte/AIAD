@@ -30,6 +30,8 @@ public class Producer extends Agent{
 	private Double angle = null;
 	private final double randomness = 0.05;
 	
+	private int quantidadeMinadaTotal;
+	
 	private ContinuousSpace<Object> space;
 	private Grid<Object> grid;
 	
@@ -67,6 +69,10 @@ public class Producer extends Agent{
 	    return false;  
 	  }  
 	  return true;  
+	}
+	
+	public int getQuantidadeMinadaTotal(){
+		return quantidadeMinadaTotal;
 	}
 	
 	@Override
@@ -174,6 +180,7 @@ public class Producer extends Agent{
 			}else if(minaObj!=null){
 				 if(((Mine)minaObj).getQuantity()>0){
 					((Mine)minaObj).incrementQuantidadeMinada();
+					this.quantidadeMinadaTotal++;
 					System.out.println("ID:"+id+"  Estou a trabalhar faltam:" + ((Mine)minaObj).getQuantity()+" na mina "+((Mine)minaObj).getID() );
 				}else if(alreadySent){	
 					System.out.println("ID:"+id+"  Parei de trabalhar");

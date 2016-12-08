@@ -1,0 +1,40 @@
+<repast.simphony.data2.engine.DataSetDescriptor>
+  <name>Medias</name>
+  <type>AGGREGATE</type>
+  <inclTick>true</inclTick>
+  <inclBatchRun>false</inclBatchRun>
+  <inclRandomSeed>false</inclRandomSeed>
+  <scheduleParams>
+    <start>1.0</start>
+    <interval>1.0</interval>
+    <priority>-Infinity</priority>
+    <pType>LAST</pType>
+    <duration>-1.0</duration>
+    <frequency>REPEAT</frequency>
+    <hashCode>139100678</hashCode>
+  </scheduleParams>
+  <atEnd>false</atEnd>
+  <methodDataSources class="linked-hash-map">
+    <entry>
+      <string>Qt minada por producer</string>
+      <repast.simphony.data2.engine.MethodDataSourceDefinition>
+        <id>Qt minada por producer</id>
+        <className>projetoAIAD.Producer</className>
+        <methodName>getQuantidadeMinadaTotal</methodName>
+        <aggType>MEAN</aggType>
+      </repast.simphony.data2.engine.MethodDataSourceDefinition>
+    </entry>
+    <entry>
+      <string>Qt transportada por transporter</string>
+      <repast.simphony.data2.engine.MethodDataSourceDefinition>
+        <id>Qt transportada por transporter</id>
+        <className>projetoAIAD.Transporter</className>
+        <methodName>getQuantidadeTransportadaTotal</methodName>
+        <aggType>MEAN</aggType>
+      </repast.simphony.data2.engine.MethodDataSourceDefinition>
+    </entry>
+  </methodDataSources>
+  <countSources class="linked-hash-map"/>
+  <customNADataSources class="linked-hash-map"/>
+  <customAggDataSources class="linked-hash-map"/>
+</repast.simphony.data2.engine.DataSetDescriptor>
