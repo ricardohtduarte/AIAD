@@ -44,14 +44,16 @@ public class Producer extends Agent{
 	private double mineX;
 	private double mineY=-1;
 	private int mineId;
+	private int raio;
 	
 	Object minaObj=null;
 
 	
-	Producer(int id)
+	Producer(int id,int raio)
 	{
 		super();
 		this.id = id;
+		this.raio=raio;
 	}
 	
 	int getId(){
@@ -151,7 +153,7 @@ public class Producer extends Agent{
 	public void stepProducer() {
 		
 		ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
-		ContinuousWithin<Object> t = new ContinuousWithin<Object>(space, (Object)this, 8.0);
+		ContinuousWithin<Object> t = new ContinuousWithin<Object>(space, (Object)this,raio);
 		Iterator<Object> iterador = t.query().iterator();
 		NdPoint minepoint = null;
 		Object elemento=null;

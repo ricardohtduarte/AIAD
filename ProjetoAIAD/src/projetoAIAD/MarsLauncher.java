@@ -44,25 +44,26 @@ public class MarsLauncher extends RepastSLauncher{
 
 	private void launchAgents() {
 		Parameters params = RunEnvironment.getInstance().getParameters();
+		int raio =  (Integer) params.getValue("raio");
 		try {
 			// create spotters
 			int spotterCount =  (Integer) params.getValue("spotter_count");
 			for (int i = 0; i < spotterCount; i++) {
-				Spotter spotter = new Spotter(i);
+				Spotter spotter = new Spotter(i,raio);
 				agentContainer.acceptNewAgent("Spotter " + i, spotter).start();
 			}
 			
 			//create producers 
 			int producerCount =  (Integer) params.getValue("producer_count");
 			for (int i = 0; i < producerCount; i++) {
-				Producer producer = new Producer(i);
+				Producer producer = new Producer(i,raio);
 				agentContainer.acceptNewAgent("Producer " + i, producer).start();
 			}
 			
 			//create producers 
 			int transporterCount =  (Integer) params.getValue("transporter_count");
 			for (int i = 0; i < transporterCount; i++) {
-				Transporter transporter = new Transporter(i);
+				Transporter transporter = new Transporter(i,raio);
 				agentContainer.acceptNewAgent("Transporter " + i, transporter).start();
 			}
 			

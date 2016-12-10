@@ -1,5 +1,5 @@
 <repast.simphony.data2.engine.DataSetDescriptor>
-  <name>Info</name>
+  <name>Medias</name>
   <type>AGGREGATE</type>
   <inclTick>true</inclTick>
   <inclBatchRun>false</inclBatchRun>
@@ -11,35 +11,26 @@
     <pType>LAST</pType>
     <duration>-1.0</duration>
     <frequency>REPEAT</frequency>
-    <hashCode>-46958604</hashCode>
+    <hashCode>139100678</hashCode>
   </scheduleParams>
   <atEnd>false</atEnd>
   <methodDataSources class="linked-hash-map">
     <entry>
-      <string>onBase</string>
+      <string>Qt minada por producer</string>
       <repast.simphony.data2.engine.MethodDataSourceDefinition>
-        <id>onBase</id>
-        <className>projetoAIAD.Base</className>
-        <methodName>getStoredQuantity</methodName>
-        <aggType>SUM</aggType>
+        <id>Qt minada por producer</id>
+        <className>projetoAIAD.Producer</className>
+        <methodName>getQuantidadeMinadaTotal</methodName>
+        <aggType>MEAN</aggType>
       </repast.simphony.data2.engine.MethodDataSourceDefinition>
     </entry>
     <entry>
-      <string>Extracted</string>
+      <string>Qt transportada por transporter</string>
       <repast.simphony.data2.engine.MethodDataSourceDefinition>
-        <id>Extracted</id>
-        <className>projetoAIAD.Mine</className>
-        <methodName>getQuantidadeMinada</methodName>
-        <aggType>SUM</aggType>
-      </repast.simphony.data2.engine.MethodDataSourceDefinition>
-    </entry>
-    <entry>
-      <string>onMine</string>
-      <repast.simphony.data2.engine.MethodDataSourceDefinition>
-        <id>onMine</id>
-        <className>projetoAIAD.Mine</className>
-        <methodName>getQuantity</methodName>
-        <aggType>SUM</aggType>
+        <id>Qt transportada por transporter</id>
+        <className>projetoAIAD.Transporter</className>
+        <methodName>getQuantidadeTransportadaTotal</methodName>
+        <aggType>MEAN</aggType>
       </repast.simphony.data2.engine.MethodDataSourceDefinition>
     </entry>
   </methodDataSources>

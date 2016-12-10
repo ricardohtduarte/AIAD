@@ -31,16 +31,17 @@ public class Spotter extends Agent{
 	private final double randomness = 0.05;
 	private int id;
 	private Object mina=null;	
-
+	private int raio;
 	private boolean stopped = false;
 	
 	private boolean alreadySent=false;
 
 
-	Spotter(int id)
+	Spotter(int id,int raio)
 	{
 		super();
 		this.id = id;
+		this.raio=raio;
 	}
 
 
@@ -100,7 +101,7 @@ public class Spotter extends Agent{
 		ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
 
 		NdPoint myPoint = space.getLocation(this);
-		ContinuousWithin<Object> t = new ContinuousWithin<Object>(space, (Object)this, 8.0);
+		ContinuousWithin<Object> t = new ContinuousWithin<Object>(space, (Object)this, raio);
 		Iterator<Object> iterador = t.query().iterator();
 		NdPoint minepoint = null;
 		Object elemento=null;

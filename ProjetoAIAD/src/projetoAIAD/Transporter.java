@@ -40,15 +40,17 @@ public class Transporter extends Agent{
 	private double mineX;
 	private double mineY;
 	private int mineId;
+	private int raio;
 
 	private boolean stopped = false;
 	private boolean waiting = false;
 	private boolean movingToBase=false;
 
 
-	Transporter(int id)
+	Transporter(int id,int raio)
 	{
 		super();
+		this.raio=raio;
 		this.id = id;
 	}
 
@@ -134,7 +136,7 @@ public class Transporter extends Agent{
 	@ScheduledMethod(start = 2, interval = 1)
 	public void stepTransporter() {
 		NdPoint myPoint = space.getLocation(this);
-		ContinuousWithin<Object> t = new ContinuousWithin<Object>(space, (Object)this, 8.0);
+		ContinuousWithin<Object> t = new ContinuousWithin<Object>(space, (Object)this,raio);
 		Iterator<Object> iterador = t.query().iterator();
 		NdPoint minepoint = null;
 		Object elemento=null;
