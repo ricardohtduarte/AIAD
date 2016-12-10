@@ -18,6 +18,12 @@
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
 									
 		/>
+				<parameter name="quantity" displayName="Quantidade maxima mina" type="int" 
+						defaultValue="50" 
+						isReadOnly="false" 
+						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
+									
+		/>
 				<parameter name="producer_count" displayName="Producer Count" type="int" 
 						defaultValue="1" 
 						isReadOnly="false" 

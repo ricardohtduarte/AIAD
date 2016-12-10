@@ -46,8 +46,9 @@ public class MarsBuilder implements ContextBuilder<Object> {
 		
 		Parameters params = RunEnvironment.getInstance().getParameters();
 		int mineCount =  (Integer) params.getValue("mine_count");
+		int mineQuantityMax =  (Integer) params.getValue("quantity");
 		for(int i = 0; i < mineCount; i++){
-			Mine mine = new Mine(i+1,50);
+			Mine mine = new Mine(i+1,random.nextInt(mineQuantityMax)+1);
 			context.add(mine);
 		}
 		

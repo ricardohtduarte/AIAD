@@ -167,7 +167,7 @@ public class Producer extends Agent{
     	 	     send(msg);
 			}else if(elemento instanceof Mine){
 				
-				if(((Mine)elemento).getID()==mineId){	
+				if(((Mine)elemento).getID()==mineId && working){	
 					minaObj=elemento;
 
 				}

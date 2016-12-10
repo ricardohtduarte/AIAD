@@ -149,7 +149,7 @@ public class Transporter extends Agent{
 				if(minaObj!=null){
 				}
 				
-				else if(((Mine)elemento).getID()==mineId){	
+				else if(((Mine)elemento).getID()==mineId && transporting){	
 					minaObj=elemento;
 				}		
 			}else if(elemento instanceof Base){
