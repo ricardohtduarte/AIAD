@@ -38,7 +38,6 @@ public class Producer extends Agent{
 	private boolean working=false;
 	private boolean waiting=false;
 
-	private boolean producing=false;
 	
 	private boolean alreadySent=false;
 	private double mineX;
@@ -155,7 +154,7 @@ public class Producer extends Agent{
 		ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
 		ContinuousWithin<Object> t = new ContinuousWithin<Object>(space, (Object)this,raio);
 		Iterator<Object> iterador = t.query().iterator();
-		NdPoint minepoint = null;
+
 		Object elemento=null;
 		
 		while(iterador.hasNext())

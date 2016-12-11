@@ -42,7 +42,6 @@ public class Transporter extends Agent{
 	private int mineId;
 	private int raio;
 
-	private boolean stopped = false;
 	private boolean waiting = false;
 	private boolean movingToBase=false;
 
@@ -91,7 +90,7 @@ public class Transporter extends Agent{
                      else if(msg.getContent().equals("no")){
                     	 waiting=false;
                      }
-                     else if(transporting ||waiting||stopped || movingToBase){
+                     else if(transporting ||waiting || movingToBase){
                     	 ACLMessage res = new ACLMessage(ACLMessage.INFORM);
                     	 res.setContent("no producer");
                     	 res.addReceiver( msg.getSender() );

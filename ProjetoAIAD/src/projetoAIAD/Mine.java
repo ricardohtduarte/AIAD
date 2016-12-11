@@ -4,10 +4,7 @@ public class Mine {
 	
 	private int mine_quantity;
 	private int quantidadeMinada;
-	private int coordX;
-	private int coordY;
 	boolean explored=false;
-	boolean mined=false;
 	
 	int id;
 	

@@ -1,10 +1,6 @@
 package projetoAIAD;
 
 public class Base {
-	
-	private int coordX;
-	private int coordY;
-	
 	private int currentStore=0;
 	
 	int id;
